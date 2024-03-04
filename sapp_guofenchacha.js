@@ -9,5 +9,5 @@ console.log($response.body);
 var obj = JSON.parse($response.body);
 obj.data.showAd = "0";
 obj.data.hasAdPrize = true;
-obj.data.hasAdPrize = 100;
+obj.data.adPrizeAmount = 100;
 $done({body: JSON.stringify(obj)});
