@@ -5,7 +5,9 @@
 hostname = *.tuanyougou.*
 *******************************/
 
-console.log($response.body);
 var obj = JSON.parse($response.body);
-obj.data.showAd = "0";
+if(obj.code == 1)
+{
+  obj.data.showAd = "0";
+}
 $done({body: JSON.stringify(obj)});
