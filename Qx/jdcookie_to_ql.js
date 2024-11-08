@@ -58,7 +58,7 @@ let qinglongEnvId = 0;
 
 ( function () {
     // 获取 qinglong Token
-    console.log('test5:start');
+    console.log('test6:start');
      //await getQinglongToken();
    
     QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
@@ -67,7 +67,7 @@ let qinglongEnvId = 0;
             qinglongToken=data.data.token;
             console.log(qinglongToken);
             
-             QingLongApi(qinglongHost + "/open/envs",{"Authorization";"Bearer "+qinglongToken}).then(data2 => {
+             QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken}).then(data2 => {
                 console.log(data2);
                 if (data2) {
                    
@@ -143,7 +143,7 @@ function getQinglongToken() {
 function QingLongApi(url,headers) {
     return new Promise((resolve, reject) => {
         const options = {
-            url: url
+            url: url,
             headers: headers,
             //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
         };
