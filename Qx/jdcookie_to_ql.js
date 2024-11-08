@@ -51,8 +51,6 @@ let qinglongHost = "http://192.168.0.103:5700/";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
 
-console.log('青龙地址：'+qinglongHost);
-
 // 公共变量
 let qinglongToken = "";
 let qinglongEnvId = 0;
@@ -60,7 +58,9 @@ let qinglongEnvId = 0;
 
 (async function () {
     // 获取 qinglong Token
+    console.log('test:start');
     await getQinglongToken();
+    console.log('test:end');
 
     if (!qinglongToken) {
         console.log('Can not get qinglong token.');
@@ -86,16 +86,16 @@ function getQinglongToken() {
             clientSecret,
             function (error, response, data) {
                 try {
+                    console.log('error:'+error+'   response:'+response+'    data:'+data);
                     if (error) {
                         throw new Error(error);
                         return;
                     }
 
                     const body = JSON.parse(data);
-                    console.log(body);
                     if (body.code == 200) {
                         qinglongToken = body.data.token;
-                        //console.log(qinglongToken);
+                        // console.log(qinglongToken);
                         resolve(true);
                     } else {
                         throw new Error('get qinglong token error.');
@@ -103,6 +103,7 @@ function getQinglongToken() {
                 } catch (e) {
                     console.log(`\nerror: ${e.message}`);
                 } finally {
+                       console.log('test:finally');
                     resolve();
                 }
             }
