@@ -58,17 +58,18 @@ let qinglongEnvId = 0;
 
 (function () {
     // 获取 qinglong Token
-    console.log('test1:start');
-    console.log('test2:start');
+    console.log('test3:start');
      //await getQinglongToken();
    
     QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data => {
+         console.log(data);
         if (data) {
              console.log('test:data:'+data);
         } else {
             $done({body});
         }
     }).catch(() => {
+        console.log('test:catch');
         $done({body});
     });
     
@@ -135,10 +136,10 @@ function QingLongApi(Url) {
         };
         $.get(options, (error, response, data) => {
             if (error) {
-                console.log("Error:\n" + error);
+                console.log("Error: " + error);
                 reject(error);
             } else {
-                console.log("Data:\n" + data);
+                console.log("Data: " + data);
                 resolve(JSON.parse(data));
             }
         });
