@@ -56,18 +56,18 @@ let qinglongToken = "";
 let qinglongEnvId = 0;
 
 
-(async function () {
+( function () {
     // 获取 qinglong Token
-    console.log('test4:start');
+    console.log('test5:start');
      //await getQinglongToken();
    
-   await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
+    QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         console.log(data);
         if (data) {
             qinglongToken=data.data.token;
             console.log(qinglongToken);
             
-            await QingLongApi(qinglongHost + "/open/envs",{"Authorization";"Bearer "+qinglongToken}).then(data2 => {
+             QingLongApi(qinglongHost + "/open/envs",{"Authorization";"Bearer "+qinglongToken}).then(data2 => {
                 console.log(data2);
                 if (data2) {
                    
