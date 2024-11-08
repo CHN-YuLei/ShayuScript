@@ -56,7 +56,7 @@ let qinglongToken = "";
 let qinglongEnvId = 0;
 
 
-( function () {
+(function () {
     // 获取 qinglong Token
     console.log('test6:start');
      //await getQinglongToken();
@@ -144,7 +144,7 @@ function QingLongApi(url,headers) {
     return new Promise((resolve, reject) => {
         const options = {
             url: url,
-            headers: headers,
+            headers: headers
             //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
         };
         $.get(options, (error, response, data) => {
