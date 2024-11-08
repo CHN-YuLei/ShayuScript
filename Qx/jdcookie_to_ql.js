@@ -59,7 +59,12 @@ let qinglongEnvId = 0;
 (async function () {
     // 获取 qinglong Token
     console.log('test:start');
-    await getQinglongToken();
+    try{
+        await getQinglongToken();
+    }catch (e) {
+        console.log(`test error: ${e.message}`);
+    }
+    
     console.log('test:end');
 
     if (!qinglongToken) {
