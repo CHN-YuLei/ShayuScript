@@ -59,11 +59,18 @@ let qinglongEnvId = 0;
 (async function () {
     // 获取 qinglong Token
     console.log('test:start');
-    try{
-        await getQinglongToken();
-    }catch (e) {
-        console.log(`test error: ${e.message}`);
-    }
+    
+     //await getQinglongToken();
+   
+    QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data => {
+        if (data) {
+             console.log('test:data:'+data);
+        } else {
+            $done({body});
+        }
+    }).catch(() => {
+        $done({body});
+    });
     
     console.log('test:end');
 
@@ -113,6 +120,28 @@ function getQinglongToken() {
                 }
             }
         );
+    });
+}
+
+function QingLongApi(Url) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            url: Url
+            //headers: {
+                //"Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+                //"User-Agent": "iPhone/CFNetwork/Darwin"
+            //},
+            //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
+        };
+        $.get(options, (error, response, data) => {
+            if (error) {
+                console.log("Error:\n" + error);
+                reject(error);
+            } else {
+                console.log("Data:\n" + data);
+                resolve(JSON.parse(data));
+            }
+        });
     });
 }
 
