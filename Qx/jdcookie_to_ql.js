@@ -56,21 +56,37 @@ let qinglongToken = "";
 let qinglongEnvId = 0;
 
 
-(function () {
+(async function () {
     // 获取 qinglong Token
-    console.log('test3:start');
+    console.log('test4:start');
      //await getQinglongToken();
    
-    QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data => {
-         console.log(data);
+   await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
+        console.log(data);
         if (data) {
-             console.log('test:data:'+data);
+            qinglongToken=data.data.token;
+            console.log(qinglongToken);
+            
+            await QingLongApi(qinglongHost + "/open/envs",{"Authorization";"Bearer "+qinglongToken}).then(data2 => {
+                console.log(data2);
+                if (data2) {
+                   
+                    console.log(data2);
+                    
+                } else {
+                    $done({});
+                }
+            }).catch(() => {
+                console.log('test:catch');
+                $done({});
+            });
+            
         } else {
-            $done({body});
+            $done({});
         }
     }).catch(() => {
         console.log('test:catch');
-        $done({body});
+        $done({});
     });
     
     console.log('test:end');
@@ -124,14 +140,11 @@ function getQinglongToken() {
     });
 }
 
-function QingLongApi(Url) {
+function QingLongApi(url,headers) {
     return new Promise((resolve, reject) => {
         const options = {
-            url: Url
-            //headers: {
-                //"Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-                //"User-Agent": "iPhone/CFNetwork/Darwin"
-            //},
+            url: url
+            headers: headers,
             //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
         };
         $.get(options, (error, response, data) => {
