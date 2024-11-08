@@ -58,11 +58,11 @@ let qinglongEnvId = 0;
 
 (async function () {
     // 获取 qinglong Token
-    console.log('test:start');
+    console.log('test2:start');
     
      //await getQinglongToken();
    
-    QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data => {
+    await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data => {
         if (data) {
              console.log('test:data:'+data);
         } else {
