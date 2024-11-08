@@ -30,7 +30,7 @@ hostname = %APPEND% api.m.jd.com
 
 const $ = new Env("获取京东Cookie更新到青龙");
 //获取 Cookie
-let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
+let rawCookie = 'pt_pin=123;pt_key:456;';  // $request.headers["Cookie"] || $request.headers["cookie"];
 let ptPinMatch = rawCookie.match(/pt_pin=([^;]+);/);
 let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
 if (ptPinMatch && ptKeyMatch) {
@@ -39,11 +39,11 @@ let currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
 let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
 if (currentJdCookie !== previousJdCookie) {
 // 如果不重复或账号变化，则通知并存储新的 Cookie
-$notify("Cookie已更新", `账号: ${ptPin}`, currentJdCookie);
-$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
+    //$notify("Cookie已更新", `账号: ${ptPin}`, currentJdCookie);
+    //$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
 } 
 } else {
-$notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
+    //$notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
 }
 //$done({});
 
@@ -58,7 +58,7 @@ let qinglongEnvId = 0;
 
 (function () {
     // 获取 qinglong Token
-    console.log('test7:start');
+    console.log('test8:start');
      //await getQinglongToken();
    
     QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
@@ -69,7 +69,7 @@ let qinglongEnvId = 0;
             
             return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         } else {
-            $done({});
+            //$done({});
         }
     }).then(data2 => {
                 console.log(data2);
@@ -78,27 +78,27 @@ let qinglongEnvId = 0;
                     console.log(data2);
                     
                 } else {
-                    $done({});
+                    //$done({});
                 }
-    }).catch(() => {
-        console.log('test:catch');
-        $done({});
+    }).catch((e) => {
+        console.log('test:catch'+e);
+        //$done({});
     });
     
     console.log('test:end');
 
     if (!qinglongToken) {
         console.log('Can not get qinglong token.');
-        $done();
+        //$done();
         return;
     }else{
         console.log('token ok.');
-        $done();
+        //$done();
         return;
     }
 
 
-    $done();
+    //$done();
 })();
 
 function getQinglongToken() {
