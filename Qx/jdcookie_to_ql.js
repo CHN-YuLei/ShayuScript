@@ -30,20 +30,21 @@ hostname = %APPEND% api.m.jd.com
 
 const $ = new Env("获取京东Cookie更新到青龙");
 //获取 Cookie
-let rawCookie = 'pt_pin=123;pt_key:456;';  // $request.headers["Cookie"] || $request.headers["cookie"];
+let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
 let ptPinMatch = rawCookie.match(/pt_pin=([^;]+);/);
 let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
 if (ptPinMatch && ptKeyMatch) {
 let ptPin = ptPinMatch[1];
+let ptPinEn = decodeURIComponent(ptPin);
 let currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
 let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
 if (currentJdCookie !== previousJdCookie) {
 // 如果不重复或账号变化，则通知并存储新的 Cookie
-    //$notify("Cookie已更新", `账号: ${ptPin}`, currentJdCookie);
+    $notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
     //$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
 } 
 } else {
-    //$notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
+    $notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
 }
 //$done({});
 
@@ -56,27 +57,30 @@ let qinglongToken = "";
 let qinglongEnvId = 0;
 
 
-(function () {
-    // 获取 qinglong Token
-    console.log('test8:start');
-     //await getQinglongToken();
+(async function () {
+   console.log('test9:start');
    
-    QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
-        console.log(data);
+   await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
-            qinglongToken=data.data.token;
-            console.log(qinglongToken);
-            
+            qinglongToken = data.token;
             return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         } else {
             //$done({});
         }
-    }).then(data2 => {
-                console.log(data2);
-                if (data2) {
-                   
-                    console.log(data2);
-                    
+    }).then(data => {
+                if (data) {
+                   for (var i = 0; i < data.length; i++) {
+                       var rowData = data[i];
+                       var remarks = rowData.remarks.split('-');
+                       if (ptPinEn == remarks[1]) {
+                           qinglongEnvId= rowData.id;
+                           break;
+                       }
+                   }
+                   console.log('更新的qinglongEnvId：'+qinglongEnvId);
+                   if(qinglongEnvId>0){
+                      //return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
+                   }
                 } else {
                     //$done({});
                 }
@@ -86,72 +90,23 @@ let qinglongEnvId = 0;
     });
     
     console.log('test:end');
-
-    if (!qinglongToken) {
-        console.log('Can not get qinglong token.');
-        //$done();
-        return;
-    }else{
-        console.log('token ok.');
-        //$done();
-        return;
-    }
-
-
     //$done();
 })();
 
-function getQinglongToken() {
-    return new Promise(async (resolve) => {
-        $httpClient.get(
-            qinglongHost +
-            "/open/auth/token?client_id=" +
-            clientId +
-            "&client_secret=" +
-            clientSecret,
-            function (error, response, data) {
-                try {
-                    console.log('error:'+error+'   response:'+response+'    data:'+data);
-                    if (error) {
-                        throw new Error(error);
-                        return;
-                    }
-
-                    const body = JSON.parse(data);
-                    if (body.code == 200) {
-                        qinglongToken = body.data.token;
-                        // console.log(qinglongToken);
-                        resolve(true);
-                    } else {
-                        throw new Error('get qinglong token error.');
-                    }
-                } catch (e) {
-                    console.log(`\nerror: ${e.message}`);
-                } finally {
-                       console.log('test:finally');
-                    resolve();
-                }
-            }
-        );
-    });
-}
-
 function QingLongApi(url,headers) {
-    console.log(url,headers);
     return new Promise((resolve, reject) => {
         const options = {
             url: url,
             headers: headers
             //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
         };
-        $.get(options, (error, response, data) => {
-            console.log(data);
-            if (error) {
+        $.get(options, (error, response, result) => {
+            console.log(result);
+            if (error || result.code != 200) {
                 console.log("Error: " + error);
                 reject(error);
             } else {
-                console.log("Data: " + data);
-                resolve(JSON.parse(data));
+                resolve(JSON.parse(result.data));
             }
         });
     });
