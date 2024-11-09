@@ -58,7 +58,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test11:start');
+   console.log('test12:start');
    
    await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -108,7 +108,7 @@ function QingLongApi(url,headers) {
                 console.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
-                resolve(JSON.parse(resultObj.data));
+                resolve(resultObj.data);
             }
         });
     });
