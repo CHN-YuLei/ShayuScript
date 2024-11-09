@@ -60,13 +60,13 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test17:start');
+   console.log('test18:start');
    
-   await QingLongApi('get',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
+   await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
             console.log('qinglongToken:'+qinglongToken);
-            return  QingLongApi('get',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
+            return  QingLongApi('GET',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         } else {
             //$done({});
         }
@@ -82,7 +82,7 @@ let qinglongEnvId = 0;
                    }
                    console.log('更新的qinglongEnvId：'+qinglongEnvId);
                    if(qinglongEnvId>0){
-                      return  QingLongApi('put',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},currentJdCookie);
+                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},currentJdCookie);
                    }
                 } else {
                     //$done({});
@@ -108,12 +108,13 @@ let qinglongEnvId = 0;
 function QingLongApi(method,url,headers,data) {
     return new Promise((resolve, reject) => {
         const options = {
+            method:method,
             url: url,
             headers: headers,
             body:data
         };
-     if(method=='get'){
-       $.get(options, (error, response, result) => {
+     //if(method=='get'){
+       $task.fetch(options, (error, response, result) => {
             console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
@@ -123,19 +124,8 @@ function QingLongApi(method,url,headers,data) {
                 resolve(resultObj.data);
             }
         });
-     }else if(method=='put')
-     {
-       $.put(options, (error, response, result) => {
-            console.log(result);
-            var resultObj = JSON.parse(result);
-            if (error || resultObj.code != 200) {
-                console.log("Error: " + error +" Result:"+result);
-                reject(error);
-            } else {
-                resolve(resultObj.data);
-            }
-        });
-     }
+     //}else if(method=='put')
+   
        
     });
 }
