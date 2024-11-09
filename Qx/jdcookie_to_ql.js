@@ -59,13 +59,13 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test13:start');
+   console.log('test14:start');
    
-   await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
+   await QingLongApi('get',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
             console.log('qinglongToken:'+qinglongToken);
-            return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
+            return  QingLongApi('get',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         } else {
             //$done({});
         }
@@ -81,6 +81,15 @@ let qinglongEnvId = 0;
                    }
                    console.log('更新的qinglongEnvId：'+qinglongEnvId);
                    if(qinglongEnvId>0){
+                      return  QingLongApi('put',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},currentJdCookie);
+                   }
+                } else {
+                    //$done({});
+                }
+    }).then(data => {
+                if (data) {
+                   //console.log('更新的qinglongEnvId：'+qinglongEnvId);
+                   if(qinglongEnvId>0){
                       //return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
                    }
                 } else {
@@ -95,14 +104,15 @@ let qinglongEnvId = 0;
     //$done();
 })();
 
-function QingLongApi(url,headers) {
+function QingLongApi(method,url,headers,data) {
     return new Promise((resolve, reject) => {
         const options = {
+            method:method,
             url: url,
-            headers: headers
-            //body: 'methodName=getHistoryTrend&p_url=' + encodeURIComponent(share_url)
+            headers: headers,
+            data:data
         };
-        $.get(options, (error, response, result) => {
+        $.ajax(options, (error, response, result) => {
             console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
