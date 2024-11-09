@@ -33,9 +33,10 @@ const $ = new Env("获取京东Cookie更新到青龙");
 let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
 let ptPinMatch = rawCookie.match(/pt_pin=([^;]+);/);
 let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
+let ptPinEn ='';
 if (ptPinMatch && ptKeyMatch) {
 let ptPin = ptPinMatch[1];
-let ptPinEn = decodeURIComponent(ptPin);
+ptPinEn = decodeURIComponent(ptPin);
 let currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
 let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
 if (currentJdCookie !== previousJdCookie) {
@@ -58,7 +59,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test12:start');
+   console.log('test13:start');
    
    await QingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
