@@ -34,16 +34,17 @@ let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
 let ptPinMatch = rawCookie.match(/pt_pin=([^;]+);/);
 let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
 let ptPinEn ='';
+let currentJdCookie='';
 if (ptPinMatch && ptKeyMatch) {
-let ptPin = ptPinMatch[1];
-ptPinEn = decodeURIComponent(ptPin);
-let currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
-let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
-if (currentJdCookie !== previousJdCookie) {
-// 如果不重复或账号变化，则通知并存储新的 Cookie
-    $notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
-    //$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
-} 
+  let ptPin = ptPinMatch[1];
+  ptPinEn = decodeURIComponent(ptPin);
+  currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
+  let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
+  if (currentJdCookie !== previousJdCookie) {
+  // 如果不重复或账号变化，则通知并存储新的 Cookie
+      $notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
+      //$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
+  } 
 } else {
     $notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
 }
@@ -59,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test15:start');
+   console.log('test16:start');
    
    await QingLongApi('get',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
