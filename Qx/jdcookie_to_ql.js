@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 
-名称:34
+名称:35
 
 ===================|调试区|====================
 
@@ -21,7 +21,7 @@ let ptPinEn ='';
 let currentJdCookie='';
 if (ptPinMatch && ptKeyMatch) {
   currentJdCookie = `pt_pin=${ptPinMatch[1]};pt_key=${ptKeyMatch[1]};`;
-  ptPinEn = decodeURIComponent(ptPin);
+  ptPinEn = decodeURIComponent(ptPinMatch[1]);
   //$notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
 } else {
     $.done();
@@ -81,7 +81,7 @@ let detailMsg ='';
     }).catch((e) => {
         console.log('test:catch：⚠️：'+e);
     }).finally(()=>{
-        $notify("京东Cookie同步青龙", `账号: ${ptPinEn}`, currentJdCookie);
+        $notify("京东Cookie同步青龙", `账号: ${accountMsg}`, detailMsg);
         console.log('test:end');
         $.done();
     });
