@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 
-名称:37
+名称:38
 
 ===================|调试区|====================
 
@@ -40,7 +40,7 @@ let detailMsg ='';
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
-            detailMsg +='\n 获取Token：✅';
+            detailMsg +='\n 获取  Token：✅';
             return  QingLongApi('GET',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
     }).then(data => {
@@ -56,10 +56,10 @@ let detailMsg ='';
                    }
                   
                    if(qinglongEnvId>0){
-                      detailMsg+='\n 匹配账户：✅';
+                      detailMsg+='\n 匹  配  账  户：✅';
                       return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
-                      detailMsg+='\n 匹配账户：⚠️';
+                      detailMsg+='\n 匹  配  账  户：⚠️';
                    }
                 }
     }).then(data => {
@@ -67,11 +67,11 @@ let detailMsg ='';
                 if (data.status == 1) {//未启用
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
-                    detailMsg+='\n 启用状态：✅';
+                    detailMsg+='\n 启  用  状  态：✅';
                 }
     }).then(data => {
                 if (data) {
-                    detailMsg+='\n 启用状态：✅';
+                    detailMsg+='\n 启  用  状  态：✅';
                 } 
     }).catch((e) => {
         console.log('⚠️Catch '+ e );
