@@ -50,7 +50,7 @@ if (ptPinMatch && ptKeyMatch) {
 }
 //$done({});
 
-let qinglongHost = "http://192.168.0.103:5700/";
+let qinglongHost = "http://192.168.0.103:5700";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
 
@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test25:start');
+   console.log('test26:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -111,9 +111,9 @@ let qinglongEnvId = 0;
 function QingLongApi(method,url,headers,body) {
     return new Promise((resolve, reject) => {
         const options = {
-            method:method,
-            url: url,
-            headers: headers,
+            method,
+            url,
+            headers,
             body:$.queryStr(body)
         };
      if(method=='GET'){
@@ -124,7 +124,7 @@ function QingLongApi(method,url,headers,body) {
                 console.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
-                resolve(resultObj.data);
+              resolve(typeof resultObj.data === 'undefined'?resultObj:resultObj.data);
             }
         });
      }else{
@@ -135,7 +135,7 @@ function QingLongApi(method,url,headers,body) {
                 console.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
-                resolve(resultObj.data);
+                resolve(typeof resultObj.data === 'undefined'?resultObj:resultObj.data);
             }
         });
     }
