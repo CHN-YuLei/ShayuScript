@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test28:start');
+   console.log('test29:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -82,7 +82,7 @@ let qinglongEnvId = 0;
                    }
                    console.log('更新的qinglongEnvId：'+qinglongEnvId);
                    if(qinglongEnvId>0){
-                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},$.queryStr({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
+                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},{id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie});
                    }
                 } else {
                     //$done({});
@@ -90,7 +90,7 @@ let qinglongEnvId = 0;
     }).then(data => {
                 if (data.status == 1) {//未启用
                      console.log('更新的qinglongEnvId222：'+qinglongEnvId);
-                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken},[qinglongEnvId]);
+                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},[qinglongEnvId]);
                 } else {
                     //$done({});
                 }
@@ -115,7 +115,7 @@ function QingLongApi(method,url,headers,body) {
             method,
             url,
             headers,
-            body:body
+            body:$.queryStr(body)
         };
      if(method=='GET'){
        $.get(options, (error, response, result) => {
