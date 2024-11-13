@@ -37,8 +37,8 @@ let ptPinEn ='';
 let currentJdCookie='';
 if (ptPinMatch && ptKeyMatch) {
   let ptPin = ptPinMatch[1];
-  ptPinEn = decodeURIComponent(ptPin);
   currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
+  ptPinEn = decodeURIComponent(ptPin);
   let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
   if (currentJdCookie !== previousJdCookie) {
   // 如果不重复或账号变化，则通知并存储新的 Cookie
@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test24:start');
+   console.log('test25:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -88,11 +88,14 @@ let qinglongEnvId = 0;
                     //$done({});
                 }
     }).then(data => {
+                if (data.status == 1) {//未启用
+                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken},[qinglongEnvId]);
+                } else {
+                    //$done({});
+                }
+    }).then(data => {
                 if (data) {
-                   //console.log('更新的qinglongEnvId：'+qinglongEnvId);
-                   if(qinglongEnvId>0){
-                      //return  QingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
-                   }
+                   //over
                 } else {
                     //$done({});
                 }
