@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test26:start');
+   console.log('test27:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -89,6 +89,7 @@ let qinglongEnvId = 0;
                 }
     }).then(data => {
                 if (data.status == 1) {//未启用
+                     console.log('更新的qinglongEnvId222：'+qinglongEnvId);
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken},[qinglongEnvId]);
                 } else {
                     //$done({});
