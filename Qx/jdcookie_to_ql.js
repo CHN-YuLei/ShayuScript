@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 author:shayu
-version:2024-11-14
+version:2024-11-14.2
 
 ===================|调试区|====================
 
@@ -22,7 +22,6 @@ let currentJdCookie='';
 if (ptPinMatch && ptKeyMatch) {
   currentJdCookie = `pt_pin=${ptPinMatch[1]};pt_key=${ptKeyMatch[1]};`;
   ptPinEn = decodeURIComponent(ptPinMatch[1]);
-  //$notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
 } else {
     $.done();
 }
@@ -62,7 +61,7 @@ let detailMsg ='';
                    }
                 }
     }).then(data => {
-                detailMsg+='\n 更新Cookie：✅';
+                detailMsg+='\n 更 新 数 据：✅';
                 if (data.status == 1) {//未启用
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
