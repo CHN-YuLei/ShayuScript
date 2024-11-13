@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test22:start');
+   console.log('test23:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -125,7 +125,7 @@ function QingLongApi(method,url,headers,data) {
             }
         });
      }else{
-        $.put(options, (error, response, result) => {
+        $.post(options, (error, response, result) => {
             console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
