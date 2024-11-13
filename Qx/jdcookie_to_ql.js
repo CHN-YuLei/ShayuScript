@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 
-名称:35
+名称:36
 
 ===================|调试区|====================
 
@@ -14,7 +14,7 @@ hostname = %APPEND% api.m.jd.com
 
 const $ = new Env("获取京东Cookie更新到青龙");
 //获取 Cookie
-let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
+let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"] || '';
 let ptPinMatch = rawCookie.match(/pt_pin=([^;]+);/);
 let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
 let ptPinEn ='';
@@ -42,7 +42,7 @@ let detailMsg ='';
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
-            detailMsg+='\n 获取Token：🎉';
+            detailMsg +='\n 获取Token：🎉';
             console.log('qinglongToken:'+qinglongToken);
             return  QingLongApi('GET',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
@@ -60,23 +60,23 @@ let detailMsg ='';
                
                    console.log('更新的qinglongEnvId：'+qinglongEnvId);
                    if(qinglongEnvId>0){
-                      detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉';
-                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
+                      detailMsg+='\n 匹配账户：🎉';
+                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
-                      detailMsg+='\n 获取Token：🎉 \n 匹配账户：⚠️';
+                      detailMsg+='\n 匹配账户：⚠️';
                    }
                 }
     }).then(data => {
-                detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉';
+                detailMsg+='\n 更新Cookie：🎉';
                 if (data.status == 1) {//未启用
                     console.log('更新的qinglongEnvId222：'+qinglongEnvId);
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
-                    detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉 \n 启用状态：🎉';
+                    detailMsg+='\n 更新Cookie：🎉 \n 启用状态：🎉';
                 }
     }).then(data => {
                 if (data) {
-                    detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉 \n 启用状态：🎉';
+                    detailMsg+='\n 启用状态：🎉';
                 } 
     }).catch((e) => {
         console.log('test:catch：⚠️：'+e);
