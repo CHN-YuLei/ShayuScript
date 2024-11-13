@@ -1,7 +1,7 @@
 /**
- * 自动获取jdcookie
+ * 获取京东Cookie更新到青龙
 
-名称:32
+名称:34
 
 ===================|调试区|====================
 
@@ -12,7 +12,6 @@
 hostname = %APPEND% api.m.jd.com
 */
 
-
 const $ = new Env("获取京东Cookie更新到青龙");
 //获取 Cookie
 let rawCookie = $request.headers["Cookie"] || $request.headers["cookie"];
@@ -21,39 +20,31 @@ let ptKeyMatch = rawCookie.match(/pt_key=([^;]+);/);
 let ptPinEn ='';
 let currentJdCookie='';
 if (ptPinMatch && ptKeyMatch) {
-  let ptPin = ptPinMatch[1];
-  currentJdCookie = `pt_pin=${ptPin};pt_key=${ptKeyMatch[1]};`;
+  currentJdCookie = `pt_pin=${ptPinMatch[1]};pt_key=${ptKeyMatch[1]};`;
   ptPinEn = decodeURIComponent(ptPin);
-  let previousJdCookie = $prefs.valueForKey(`jdCookie_${ptPin}`) || "";
-  if (currentJdCookie !== previousJdCookie) {
-  // 如果不重复或账号变化，则通知并存储新的 Cookie
-      $notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
-      //$prefs.setValueForKey(currentJdCookie, `jdCookie_${ptPin}`);
-  } 
+  //$notify("Cookie已更新", `账号: ${ptPinEn}`, currentJdCookie);
 } else {
-    $notify("错误", "", "无法从Cookie中提取pt_pin或pt_key。");
+    $.done();
 }
-//$done({});
 
+// 公共变量
 let qinglongHost = "http://192.168.0.103:5700";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
-
-// 公共变量
 let qinglongToken = "";
 let qinglongEnvId = 0;
-
+let accountMsg = ptPinEn;
+let detailMsg ='';
 
 (async function () {
-   console.log('test31:start');
+   console.log('test:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
+            detailMsg+='\n 获取Token：🎉';
             console.log('qinglongToken:'+qinglongToken);
             return  QingLongApi('GET',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
-        } else {
-            //$done({});
         }
     }).then(data => {
                 if (data) {
@@ -61,37 +52,39 @@ let qinglongEnvId = 0;
                        var rowData = data[i];
                        var remarks = rowData.remarks.split('-');
                        if (ptPinEn == remarks[1]) {
+                           accountMsg = rowData.remarks;
                            qinglongEnvId= rowData.id;
                            break;
                        }
                    }
+               
                    console.log('更新的qinglongEnvId：'+qinglongEnvId);
                    if(qinglongEnvId>0){
-                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},$.queryStr({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
+                      detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉';
+                      return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
+                   }else{
+                      detailMsg+='\n 获取Token：🎉 \n 匹配账户：⚠️';
                    }
-                } else {
-                    //$done({});
                 }
     }).then(data => {
+                detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉';
                 if (data.status == 1) {//未启用
-                     console.log('更新的qinglongEnvId222：'+qinglongEnvId);
+                    console.log('更新的qinglongEnvId222：'+qinglongEnvId);
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
-                    //$done({});
+                    detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉 \n 启用状态：🎉';
                 }
     }).then(data => {
                 if (data) {
-                   //over
-                } else {
-                    //$done({});
-                }
+                    detailMsg+='\n 获取Token：🎉 \n 匹配账户：🎉 \n 更新Cookie：🎉 \n 启用状态：🎉';
+                } 
     }).catch((e) => {
-        console.log('test:catch'+e);
-        //$done({});
+        console.log('test:catch：⚠️：'+e);
+    }).finally(()=>{
+        $notify("京东Cookie同步青龙", `账号: ${ptPinEn}`, currentJdCookie);
+        console.log('test:end');
+        $.done();
     });
-    
-    console.log('test:end');
-    //$done();
 })();
 
 function QingLongApi(method,url,headers,body) {
@@ -104,7 +97,6 @@ function QingLongApi(method,url,headers,body) {
         };
      if(method=='GET'){
        $.get(options, (error, response, result) => {
-            console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
                 console.log("Error: " + error +" Result:"+result);
