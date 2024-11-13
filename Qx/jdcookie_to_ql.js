@@ -1,22 +1,7 @@
 /**
  * 自动获取jdcookie
 
-名称:pt_key
-描述:获取京东ck
-支持:仅测试Quantumult-X
-更新日志:2024.10.29修改脚本一直处于运行状态，添加多账号获取
-说明:获取新ck切换账号后，直接退后台重进
-TG频道:https://t.me/LXi_Collection_hall
-TG群聊:https://t.me/LxiCollectionhallChat
-
-脚本声明:：
- 1. 本脚本仅用于学习研究，禁止用于商业用途。
- 2. 本脚本不保证准确性、可靠性、完整性和及时性。
- 3. 任何人或组织可自由使用，无需通知。
- 4. 作者不对使用本脚本产生的任何损失或问题负责。
- 5. 如认为脚本侵犯权益，请提供身份证明与所有权证明，我将在确认后删除相关内容。
- 6. 请勿将本脚本用于商业用途，后果自负。
- 7. 本脚本版权归作者所有。
+名称:32
 
 ===================|调试区|====================
 
@@ -90,7 +75,7 @@ let qinglongEnvId = 0;
     }).then(data => {
                 if (data.status == 1) {//未启用
                      console.log('更新的qinglongEnvId222：'+qinglongEnvId);
-                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},[qinglongEnvId]);
+                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
                     //$done({});
                 }
