@@ -60,7 +60,7 @@ let qinglongEnvId = 0;
 
 
 (async function () {
-   console.log('test19:start');
+   console.log('test20:start');
    
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
@@ -113,8 +113,8 @@ function QingLongApi(method,url,headers,data) {
             headers: headers,
             body:data
         };
-     //if(method=='GET'){
-       $task.fatch(options, (error, response, result) => {
+     if(method=='GET'){
+       $.get(options, (error, response, result) => {
             console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
@@ -124,8 +124,17 @@ function QingLongApi(method,url,headers,data) {
                 resolve(resultObj.data);
             }
         });
-     //}else if(method=='PUT2')
-      
+     }else{
+        $.post(options, (error, response, result) => {
+            console.log(result);
+            var resultObj = JSON.parse(result);
+            if (error || resultObj.code != 200) {
+                console.log("Error: " + error +" Result:"+result);
+                reject(error);
+            } else {
+                resolve(resultObj.data);
+            }
+        });
     });
 }
 
