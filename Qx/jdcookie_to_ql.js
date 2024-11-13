@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 
-名称:36
+名称:37
 
 ===================|调试区|====================
 
@@ -37,13 +37,10 @@ let accountMsg = ptPinEn;
 let detailMsg ='';
 
 (async function () {
-   console.log('test:start');
-   
    await QingLongApi('GET',qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data => {
         if (data) {
             qinglongToken = data.token;
-            detailMsg +='\n 获取Token：🎉';
-            console.log('qinglongToken:'+qinglongToken);
+            detailMsg +='\n 获取Token：✅';
             return  QingLongApi('GET',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
     }).then(data => {
@@ -57,32 +54,29 @@ let detailMsg ='';
                            break;
                        }
                    }
-               
-                   console.log('更新的qinglongEnvId：'+qinglongEnvId);
+                  
                    if(qinglongEnvId>0){
-                      detailMsg+='\n 匹配账户：🎉';
+                      detailMsg+='\n 匹配账户：✅';
                       return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
                       detailMsg+='\n 匹配账户：⚠️';
                    }
                 }
     }).then(data => {
-                detailMsg+='\n 更新Cookie：🎉';
+                detailMsg+='\n 更新Cookie：✅';
                 if (data.status == 1) {//未启用
-                    console.log('更新的qinglongEnvId222：'+qinglongEnvId);
                    return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                 } else {
-                    detailMsg+='\n 更新Cookie：🎉 \n 启用状态：🎉';
+                    detailMsg+='\n 启用状态：✅';
                 }
     }).then(data => {
                 if (data) {
-                    detailMsg+='\n 启用状态：🎉';
+                    detailMsg+='\n 启用状态：✅';
                 } 
     }).catch((e) => {
-        console.log('test:catch：⚠️：'+e);
+        console.log('⚠️Catch '+ e );
     }).finally(()=>{
         $notify("京东Cookie同步青龙", `账号: ${accountMsg}`, detailMsg);
-        console.log('test:end');
         $.done();
     });
 })();
@@ -107,10 +101,9 @@ function QingLongApi(method,url,headers,body) {
         });
      }else{
         $.post(options, (error, response, result) => {
-            console.log(result);
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
-                console.log("Error: " + error +" Result:"+result);
+                console.log("⚠️Error: " + error +" ,Result:"+result);
                 reject(error);
             } else {
                 resolve(typeof resultObj.data === 'undefined'?resultObj:resultObj.data);
