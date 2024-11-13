@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 author:shayu
-version:2024-11-14.4
+version:2024-11-14.5
 
 ===================|调试区|====================
 
@@ -58,16 +58,16 @@ let detailMsg ='';
                       return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
                       detailMsg+='\n 匹 配 账 户：⚠️';
-                      $.done();
                    }
                 }
     }).then(data => {
-              console.log(data);
-                detailMsg+='\n 更 新 数 据：✅';
-                if (data.status == 1) {//未启用
-                   return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
-                } else {
-                    detailMsg+='\n 启 用 状 态：✅';
+                if(data){
+                    detailMsg+='\n 更 新 数 据：✅';
+                    if (data.status == 1) {//未启用
+                        return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
+                    } else {
+                        detailMsg+='\n 启 用 状 态：✅';
+                    }
                 }
     }).then(data => {
                 if (data) {
@@ -96,7 +96,7 @@ function QingLongApi(method,url,headers,body) {
                 console.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
-              resolve(typeof resultObj.data === 'undefined'?resultObj:resultObj.data);
+                resolve(typeof resultObj.data === 'undefined'?resultObj:resultObj.data);
             }
         });
      }else{
