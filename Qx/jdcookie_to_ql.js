@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 author:shayu
-version:2024-11-14.3
+version:2024-11-14.4
 
 ===================|调试区|====================
 
@@ -58,6 +58,7 @@ let detailMsg ='';
                       return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
                       detailMsg+='\n 匹 配 账 户：⚠️';
+                      $.done();
                    }
                 }
     }).then(data => {
