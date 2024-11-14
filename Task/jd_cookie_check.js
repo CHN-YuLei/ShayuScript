@@ -11,27 +11,19 @@ var imgUrl = {
 };
 
 (async () => {
-   await GetQingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret).then(data=>{
+   await GetQingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data=>{
      if (data) {
             qinglongToken = data.token;
             return  GetQingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
    }).then(data=>{
                  if (data) {
-                   for (var i = 0; i < data.length; i++) {
-                       var rowData = data[i];
-                       var remarks = rowData.remarks.split('-');
-                       if (ptPinEn == remarks[1]) {
-                           accountMsg = rowData.remarks;
-                           qinglongEnvId= rowData.id;
-                           break;
-                       }
-                   }
+                  
 
                   $.msg("标题11111111", "标题22222222", "标题333333333⚠️", imgUrl);
                 }
    }).catch(e=>{
-         $.msg($.name, "", "签到终止, 未获取Cookie ⚠️", imgUrl);
+         $.msg("标题1111113", "", e, imgUrl);
    }).finally(()=>{
       $.msg("标题1111112", "标题22222222", "标题333333333⚠️", imgUrl);
       $.done();
