@@ -1,3 +1,14 @@
+/**
+ * 京东Cookie有效性检测
+author:shayu
+version:2024-11-15
+
+===================|调试区|====================
+
+[task_local]
+0 23 * * * https://raw.githubusercontent.com/CHN-YuLei/ShayuScript/refs/heads/main/Task/jd_cookie_check.js, tag=京东Cookie有效性检测, img-url=https://s3.bmp.ovh/imgs/2024/11/14/a2c781c9ceac00fd.jpg, enabled=true
+*/
+
 var $ = new Env('京东Cookie有效性检测');
 
 // 公共变量
@@ -15,14 +26,17 @@ var imgUrl = {
    await GetQingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data=>{
      if (data) {
             qinglongToken = data.token;
-            return  GetQingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
+            return await GetQingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
    }).then(data=>{
                  if (data) {
                      for (var i = 0; i < data.length; i++) {
                        var rowData = data[i];
+                       if(rowData.name!='JD_COOKIE'){
+                           continue;
+                       }
                        var remarks = rowData.remarks.split('-');
-                       msg+= remarks[0]+':'+(rowData.status==0?'✅':'⚠️');
+                       msg+= remarks[0]+':'+(rowData.status==0?'✅ ':'⚠️ ');
                        if((i+1) % 4 == 0){
                          msg+='\n';
                        }
@@ -39,10 +53,9 @@ var imgUrl = {
 
 function GetQingLongApi(url,headers) {
     return new Promise((resolve, reject) => {
-       $.get({url,headers}, (error, response, result) => {
+       $.get({url,headers}, async (error, response, result) => {
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
-                $.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
                 resolve(resultObj.data);
