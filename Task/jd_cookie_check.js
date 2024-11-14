@@ -22,7 +22,7 @@ var imgUrl = {
                      for (var i = 0; i < data.length; i++) {
                        var rowData = data[i];
                        var remarks = rowData.remarks.split('-');
-                       msg+= remarks[0]+':'+rowData.status==0?'✅':'⚠️';
+                       msg+= remarks[0]+':'+(rowData.status==0?'✅':'⚠️');
                        if((i+1) % 4 == 0){
                          msg+='\n';
                        }
