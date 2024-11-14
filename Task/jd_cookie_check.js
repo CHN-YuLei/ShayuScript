@@ -26,7 +26,7 @@ var imgUrl = {
    await GetQingLongApi(qinglongHost + "/open/auth/token?client_id=" + clientId +"&client_secret=" + clientSecret,{}).then(data=>{
      if (data) {
             qinglongToken = data.token;
-            return await GetQingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
+            return GetQingLongApi(qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken});
         }
    }).then(data=>{
                  if (data) {
