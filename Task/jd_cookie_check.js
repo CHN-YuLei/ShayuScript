@@ -5,9 +5,10 @@ let qinglongHost = "http://192.168.0.103:5700";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
 let qinglongToken = "";
+let msg = '';
 var imgUrl = {
-  'open-url': 'kuaikan://',
-  'media-url': 'https://ftp.bmp.ovh/imgs/2020/09/16da56c186ffa6a2.png'
+  'open-url': 'openapp.jdmoble://',
+  'media-url': 'https://s3.bmp.ovh/imgs/2024/11/14/a2c781c9ceac00fd.jpg'
 };
 
 (async () => {
@@ -18,14 +19,19 @@ var imgUrl = {
         }
    }).then(data=>{
                  if (data) {
-                  
-
-                  $.msg("标题11111111", "标题22222222", "标题333333333⚠️", imgUrl);
+                     for (var i = 0; i < data.length; i++) {
+                       var rowData = data[i];
+                       var remarks = rowData.remarks.split('-');
+                       msg+= remarks[0]+':'+rowData.status==0?'✅':'⚠️';
+                       if((i+1) % 4 = 0){
+                         msg+='\n';
+                       }
+                     }
                 }
    }).catch(e=>{
-         $.msg("标题1111113", "", e, imgUrl);
+         msg+='\n'+e;
    }).finally(()=>{
-      $.msg("标题1111112", "标题22222222", "标题333333333⚠️", imgUrl);
+      $.msg($.name, "", msg, imgUrl);
       $.done();
    });
 })();
@@ -36,7 +42,7 @@ function GetQingLongApi(url,headers) {
        $.get({url,headers}, (error, response, result) => {
             var resultObj = JSON.parse(result);
             if (error || resultObj.code != 200) {
-                console.log("Error: " + error +" Result:"+result);
+                $.log("Error: " + error +" Result:"+result);
                 reject(error);
             } else {
                 resolve(resultObj.data);
