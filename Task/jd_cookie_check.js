@@ -23,7 +23,7 @@ var imgUrl = {
                        var rowData = data[i];
                        var remarks = rowData.remarks.split('-');
                        msg+= remarks[0]+':'+rowData.status==0?'✅':'⚠️';
-                       if((i+1) % 4 = 0){
+                       if((i+1) % 4 == 0){
                          msg+='\n';
                        }
                      }
