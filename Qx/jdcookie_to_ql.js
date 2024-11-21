@@ -1,7 +1,7 @@
 /**
  * 获取京东Cookie更新到青龙
 author:shayu
-version:2024-11-21
+version:2024-11-21.2
 
 ===================|调试区|====================
 
@@ -54,24 +54,24 @@ let detailMsg ='';
                    }
                   
                    if(qinglongEnvId>0){
-                      detailMsg+='匹配账户：✅';
+                      detailMsg+='账户：✅';
                       return  QingLongApi('PUT',qinglongHost + "/open/envs",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify({id:qinglongEnvId,name:'JD_COOKIE',value:currentJdCookie}));
                    }else{
-                      detailMsg+='匹配账户：⚠️';
+                      detailMsg+='账户：⚠️';
                    }
                 }
     }).then(data => {
                 if(data){
-                    detailMsg+='  更新数据：✅';
+                    detailMsg+='   更新：✅';
                     if (data.status == 1) {//未启用
                         return  QingLongApi('PUT',qinglongHost + "/open/envs/enable",{"Authorization":"Bearer "+qinglongToken,"Content-Type":"application/json"},JSON.stringify([qinglongEnvId]));
                     } else {
-                        detailMsg+='  启用状态：✅';
+                        detailMsg+='   启用：✅';
                     }
                 }
     }).then(data => {
                 if (data) {
-                    detailMsg+='  启用状态：✅';
+                    detailMsg+='   启用：✅';
                 } 
     }).catch((e) => {
         console.log('⚠️Catch '+ e );
