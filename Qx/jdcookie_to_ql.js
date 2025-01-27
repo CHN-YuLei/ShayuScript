@@ -27,7 +27,7 @@ if (ptPinMatch && ptKeyMatch) {
 }
 
 // 公共变量
-let qinglongHost = "http://192.168.1.7:15700";
+let qinglongHost = "http://192.168.1.7:5700";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
 let qinglongToken = "";
