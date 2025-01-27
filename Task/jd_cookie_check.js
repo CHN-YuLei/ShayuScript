@@ -12,7 +12,7 @@ version:2024-11-15
 var $ = new Env('京东Cookie有效性检测');
 
 // 公共变量
-let qinglongHost = "http://192.168.1.7:15700";
+let qinglongHost = "http://192.168.1.7:5700";
 let clientId = "R3AEySTieOP_";
 let clientSecret = "f_q7FDYAb3OzakvOynF-liF8";
 let qinglongToken = "";
