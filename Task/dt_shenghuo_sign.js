@@ -39,8 +39,9 @@ const url = 'https://ebeikeapi.ebeck.cn/api/user/userSign';
   $.done();
 });
 
-// 签到核心函数
+// 签到核心函数 (修复版)
 async function userSign(token) {
+  const url = 'https://ebeikeapi.ebeck.cn/api/user/userSign';
   const headers = {
     'Host': 'ebeikeapi.ebeck.cn',
     'Connection': 'keep-alive',
@@ -56,19 +57,45 @@ async function userSign(token) {
   });
 
   try {
-    const response = await $.post({ url, headers, body });
-    const data = JSON.parse(response);
+    $.log(`🌐 请求URL: ${url}`);
+    $.log(`📝 请求体: ${body}`);
     
-    if (data.status === 'ok') {
+    // 发送请求并获取响应
+    const response = await $.post({ url, headers, body });
+    
+    // 检查响应是否为空
+    if (!response) {
+      return `⚠️ 请求异常! 服务器返回空响应`;
+    }
+    
+    $.log(`📨 响应内容: ${response}`);
+    
+    // 尝试解析JSON
+    let data;
+    try {
+      data = JSON.parse(response);
+    } catch (parseError) {
+      $.log(`❌ JSON解析失败: ${parseError.message}`);
+      $.log(`📄 原始响应内容: ${response}`);
+      return `⚠️ JSON解析失败: ${parseError.message}`;
+    }
+    
+    // 处理响应数据
+    if (data && data.status === 'ok') {
       const signData = data.data;
       return `✅ 签到成功!\n├ 用户ID: ${signData.uid}\n├ 获得积分: +${signData.points}\n└ 签到时间: ${signData.create_time}`;
-    } else {
+    } else if (data) {
       return `❌ 签到失败! 原因: ${data.msg || '未知错误'}`;
+    } else {
+      return `⚠️ 响应格式异常: ${response.substring(0, 100)}...`;
     }
   } catch (e) {
-    return `⚠️ 请求异常! 错误信息: ${e.message}`;
+    const errorMsg = `⚠️ 请求异常! 错误信息: ${e.message}`;
+    $.log(errorMsg);
+    return errorMsg;
   }
 }
+
 
 // 获取环境变量中的令牌
 function getTokens() {
